@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 // import "./App.css";
-// import Map from "./components/Map.js";
+import Map from "./components/Map.js";
 import {loadGoogleMaps, loadPlaces} from "./utils.js";
 
 export default class App extends Component {
@@ -11,7 +11,8 @@ export default class App extends Component {
     Promise.all([googleMapsPromise, foursquarePromise]).then(values => {
       console.log(values);
       let google = values[0];
-      let venues = values[1].response.venues;
+      // let venues = values[1].response.venues;
+      let venues = values[1].response.groups[0].items;
 
       this.google = google;
       this.markers = [];
@@ -19,16 +20,16 @@ export default class App extends Component {
         zoom: 15,
         scrollwheel: true,
         center: {
-          lat: venues[0].location.lat,
-          lng: venues[0].location.lng
+          lat: venues[0].venue.location.lat,
+          lng: venues[0].venue.location.lng
         }
       });
 
       venues.forEach(venue => {
         let marker = new google.maps.Marker({
           position: {
-            lat: venue.location.lat,
-            lng: venue.location.lng
+            lat: venue.venue.location.lat,
+            lng: venue.venue.location.lng
           },
           map: this.map,
           animation: google.maps.Animation.DROP,
@@ -43,9 +44,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <main>
-          <div id="map" role="application" style={{height: "1000px"}} />
-        </main>
+        <Map />
       </div>
     );
   }
