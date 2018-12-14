@@ -1,9 +1,12 @@
 import React, {Component} from "react";
-// import "./App.css";
+import "./App.css";
 import Map from "./components/Map.js";
 import {loadGoogleMaps, loadPlaces} from "./utils.js";
 
 export default class App extends Component {
+  state: {
+    query: []
+  };
   componentDidMount() {
     let googleMapsPromise = loadGoogleMaps();
     let foursquarePromise = loadPlaces();
@@ -33,17 +36,34 @@ export default class App extends Component {
           },
           map: this.map,
           animation: google.maps.Animation.DROP,
-          //custom parameters
-          name: venue.name,
-          id: venue.id
+          name: venue.venue.name,
+          id: venue.venue.id
         });
         this.markers.push(marker);
       });
     });
   }
+
+  filterVenues(query) {
+    if (query) {
+      this.markers.forEach(marker => {
+        marker.name.toLowerCase().includes(query) === true
+          ? marker.setVisible(true)
+          : marker.setVisible(false);
+      });
+      this.setState({query});
+    }
+  }
   render() {
     return (
       <div>
+        <div id="sidebar">
+          <input
+            onChange={e => {
+              this.filterVenues(e.target.value);
+            }}
+          />
+        </div>
         <Map />
       </div>
     );

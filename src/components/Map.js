@@ -8,7 +8,7 @@ export default class Map extends Component {
           id="map"
           aria-hidden="true"
           role="application"
-          style={{height: "1000px"}}
+          style={{height: "100vh"}}
         />
       </main>
     );
