@@ -14,10 +14,12 @@ export default class App extends Component {
     Promise.all([googleMapsPromise, foursquarePromise]).then(values => {
       // get google object from promise resolve
       let google = values[0];
-      // get venues from promise resolve
+      // get venues from promise resolve and store them into props
       this.venues = values[1].response.groups[0].items;
+      // store google object, map, markers and infowindow into props
       this.google = google;
       this.markers = [];
+      this.infoWindow = new google.maps.InfoWindow();
       this.map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
         scrollwheel: true,
@@ -50,6 +52,14 @@ export default class App extends Component {
           }, 1500);
         });
 
+        // add infowindow to each marker
+        google.maps.event.addListener(marker, "click", () => {
+          this.infoWindow.setContent(marker.name);
+          this.map.setCenter(marker.position);
+          this.map.setZoom(17);
+          this.infoWindow.open(this.map, marker);
+        });
+
         this.markers.push(marker);
       });
       //show only copy of venues data source
@@ -57,14 +67,19 @@ export default class App extends Component {
     });
   }
 
+  listItemClick = venue => {
+    let marker = this.markers.filter(marker => marker.id === venue.venue.id);
+    this.infoWindow.setContent(venue.venue.name);
+    this.map.setCenter(venue.venue.location);
+    this.map.setZoom(17);
+    this.infoWindow.open(this.map, marker[0]);
+  };
+
   filterVenues(query) {
     let f = this.venues.filter(venue =>
       venue.venue.name.toLowerCase().includes(query)
     );
     this.setState({filteredVanues: f});
-
-    console.log(this.state.filteredVenues);
-    console.log(f);
     this.markers.forEach(marker => {
       marker.name.toLowerCase().includes(query) === true
         ? marker.setVisible(true)
@@ -85,7 +100,13 @@ export default class App extends Component {
           {this.state !== null &&
             this.state.filteredVanues.length > 0 &&
             this.state.filteredVanues.map((venue, index) => (
-              <div key={index} className="venue-item">
+              <div
+                key={index}
+                className="venue-item"
+                onClick={() => {
+                  this.listItemClick(venue);
+                }}
+              >
                 {venue.venue.name}
               </div>
             ))}
