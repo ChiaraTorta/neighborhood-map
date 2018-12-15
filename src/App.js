@@ -14,7 +14,6 @@ export default class App extends Component {
     Promise.all([googleMapsPromise, foursquarePromise]).then(values => {
       console.log(values);
       let google = values[0];
-      // let venues = values[1].response.venues;
       let venues = values[1].response.groups[0].items;
 
       this.google = google;
@@ -39,20 +38,29 @@ export default class App extends Component {
           name: venue.venue.name,
           id: venue.venue.id
         });
+
+        google.maps.event.addListener(marker, "click", () => {
+          marker.getAnimation() !== null
+            ? marker.setAnimation(null)
+            : marker.setAnimation(google.maps.Animation.BOUNCE);
+          setTimeout(() => {
+            marker.setAnimation(null);
+          }, 1500);
+        });
+
         this.markers.push(marker);
       });
+      this.setState({venues: this.venues});
     });
   }
 
   filterVenues(query) {
-    if (query) {
-      this.markers.forEach(marker => {
-        marker.name.toLowerCase().includes(query) === true
-          ? marker.setVisible(true)
-          : marker.setVisible(false);
-      });
-      this.setState({query});
-    }
+    this.markers.forEach(marker => {
+      marker.name.toLowerCase().includes(query) === true
+        ? marker.setVisible(true)
+        : marker.setVisible(false);
+    });
+    this.setState({query});
   }
   render() {
     return (
@@ -63,6 +71,12 @@ export default class App extends Component {
               this.filterVenues(e.target.value);
             }}
           />
+          <br />
+          {this.state.venues &&
+            this.statue.venues.length > 0 &&
+            this.state.venues.map((venue, index) => (
+              <div className="venue-item">{venue.venue.name}</div>
+            ))}
         </div>
         <Map />
       </div>
