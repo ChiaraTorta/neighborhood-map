@@ -12,10 +12,10 @@ export default class App extends Component {
     let foursquarePromise = loadPlaces();
 
     Promise.all([googleMapsPromise, foursquarePromise]).then(values => {
-      console.log(values);
       let google = values[0];
       let venues = values[1].response.groups[0].items;
 
+      this.setState({venues});
       this.google = google;
       this.markers = [];
       this.map = new google.maps.Map(document.getElementById("map"), {
@@ -50,7 +50,6 @@ export default class App extends Component {
 
         this.markers.push(marker);
       });
-      this.setState({venues: this.venues});
     });
   }
 
@@ -60,7 +59,7 @@ export default class App extends Component {
         ? marker.setVisible(true)
         : marker.setVisible(false);
     });
-    this.setState({query});
+    this.setState({query: query});
   }
   render() {
     return (
@@ -69,13 +68,14 @@ export default class App extends Component {
           <input
             onChange={e => {
               this.filterVenues(e.target.value);
+              console.log("Query: " + this.state.query);
             }}
           />
           <br />
-          {this.state.venues &&
-            this.statue.venues.length > 0 &&
+          {this.state !== null &&
+            this.state.venues.length > 0 &&
             this.state.venues.map((venue, index) => (
-              <div className="venue-item">{venue.venue.name}</div>
+              <div key={index}>{venue.venue.name}</div>
             ))}
         </div>
         <Map />
