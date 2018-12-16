@@ -35,7 +35,6 @@ export default class App extends Component {
 
       // add marker to each venue
       this.venues.forEach(venue => {
-        console.log(venue);
         let marker = new google.maps.Marker({
           position: {
             lat: venue.venue.location.lat,
@@ -135,27 +134,30 @@ export default class App extends Component {
   }
   render() {
     return (
-      <div>
+      <div id="app">
         <div id="sidebar">
           <input
+            id="input"
+            placeholder="Type a venue"
             onChange={e => {
               this.filterVenues(e.target.value);
             }}
           />
-          <br />
-          {this.state !== null &&
-            this.state.filteredVanues.length > 0 &&
-            this.state.filteredVanues.map((venue, index) => (
-              <div
-                key={index}
-                className="venue-item"
-                onClick={() => {
-                  this.listItemClick(venue);
-                }}
-              >
-                {venue.venue.name}
-              </div>
-            ))}
+          <div id="list-items">
+            {this.state !== null &&
+              this.state.filteredVanues.length > 0 &&
+              this.state.filteredVanues.map((venue, index) => (
+                <div
+                  key={index}
+                  className="venue-item"
+                  onClick={() => {
+                    this.listItemClick(venue);
+                  }}
+                >
+                  {venue.venue.name}
+                </div>
+              ))}
+          </div>
         </div>
         <Map />
       </div>

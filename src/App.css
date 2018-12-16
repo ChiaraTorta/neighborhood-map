@@ -1,26 +1,68 @@
 body {
-  margin: 0
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+
+#app {
+
 }
 
 #map {
-  /* display: none; */
-  right : 0;
-
+  width: 75%;
+  max-width: 100%;
 }
+
+#input {
+  position: fixed;
+  padding: 7px;
+  margin-bottom: 5px;
+  background: #99ccff;
+}
+
 #sidebar {
   position: absolute;
   z-index: 100;
   top: 0;
   left: 0;
-  width: 325px;
-  max-width: 100%;
   height: 100vh;
   max-height: 100vh;
   background: white;
+  overflow-y: scroll;
+  background: #99ccff;
 }
 
 .venue-item {
   padding: 5px;
   margin-bottom: 5px;
-  border: 1px solid grey;
+}
+
+@media (min-width: 801px) {
+  #sidebar {
+    width: 25%;
+  }
+  #input {
+    width: 23%;
+  }
+
+  #map {
+    width: 75%;
+    float: right;
+  }
+}
+
+@media (max-width: 800px) {
+  #sidebar {
+    width: 100%;
+    height: 23%;
+  }
+  #input {
+    width: 96%;
+  }
+  #map {
+    max-height: 100vh;
+    width: 100%;
+    /* bottom: -120px; */
+  }
 }
