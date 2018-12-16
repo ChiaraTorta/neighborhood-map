@@ -25,7 +25,7 @@ export default class App extends Component {
       this.markers = [];
       this.infoWindow = new google.maps.InfoWindow();
       this.map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
+        zoom: 12,
         scrollwheel: true,
         center: {
           lat: this.venues[0].venue.location.lat,
@@ -35,6 +35,7 @@ export default class App extends Component {
 
       // add marker to each venue
       this.venues.forEach(venue => {
+        console.log(venue);
         let marker = new google.maps.Marker({
           position: {
             lat: venue.venue.location.lat,
@@ -43,17 +44,15 @@ export default class App extends Component {
           map: this.map,
           animation: google.maps.Animation.DROP,
           name: venue.venue.name,
-          id: venue.venue.id
+          id: venue.venue.id,
+          address: venue.venue.location.address
         });
 
         // add event listener to each marker
         google.maps.event.addListener(marker, "click", () => {
           marker.getAnimation() !== null
             ? marker.setAnimation(null)
-            : marker.setAnimation(google.maps.Animation.BOUNCE) &&
-              marker.setIcon(
-                "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-              );
+            : marker.setAnimation(google.maps.Animation.BOUNCE);
           setTimeout(() => {
             marker.setAnimation(null);
           }, 1500);
@@ -61,7 +60,17 @@ export default class App extends Component {
 
         // add infowindow to each marker
         google.maps.event.addListener(marker, "click", () => {
-          this.infoWindow.setContent(marker.name);
+          marker.address !== undefined
+            ? this.infoWindow.setContent(
+                "<div><div><b>" +
+                  marker.name +
+                  "</b></div><div>" +
+                  marker.address +
+                  "</div></div>"
+              )
+            : this.infoWindow.setContent(
+                "<div><b>" + marker.name + "</b></div>"
+              );
           this.map.setCenter(marker.position);
           this.map.setZoom(15);
           this.infoWindow.open(this.map, marker);
@@ -73,14 +82,23 @@ export default class App extends Component {
       this.setState({filteredVanues: this.venues});
     });
   }
-
   /*
    *  Event handler for list item click
    */
   listItemClick = venue => {
     let marker = this.markers.filter(marker => marker.id === venue.venue.id);
     // open infowindow
-    this.infoWindow.setContent(venue.venue.name);
+    venue.venue.location.address !== undefined
+      ? this.infoWindow.setContent(
+          "<div><div><b>" +
+            venue.venue.name +
+            "</b></div><div>" +
+            venue.venue.location.address +
+            "</div></div>"
+        )
+      : this.infoWindow.setContent(
+          "<div><b>" + venue.venue.name + "</b></div>"
+        );
     this.map.setCenter(venue.venue.location);
     this.map.setZoom(15);
     this.infoWindow.open(this.map, marker[0]);
@@ -88,10 +106,7 @@ export default class App extends Component {
     // add animation
     marker[0].getAnimation() !== null
       ? marker[0].setAnimation(null)
-      : marker[0].setAnimation(this.google.maps.Animation.BOUNCE) &&
-        marker[0].setIcon(
-          "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-        );
+      : marker[0].setAnimation(this.google.maps.Animation.BOUNCE);
     setTimeout(() => {
       marker[0].setAnimation(null);
     }, 1500);
@@ -111,8 +126,11 @@ export default class App extends Component {
         ? marker.setVisible(true)
         : marker.setVisible(false);
     });
-    // close infowindow if user type a query
+    // if user types a query:
+    // ...close infowindow
     this.infoWindow.close();
+    // ...reset zoom
+    this.map.setZoom(12);
     this.setState({filteredVanues: f, query});
   }
   render() {
