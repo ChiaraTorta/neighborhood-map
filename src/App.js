@@ -115,13 +115,17 @@ export default class App extends Component {
    *  Function to filter list items depending on query
    */
   filterVenues(query) {
+    console.log(query);
+    console.log(this.venues);
+    console.log(this.filteredVanues);
     let f = this.venues.filter(venue =>
-      venue.venue.name.toLowerCase().includes(query)
+      venue.venue.name.toLowerCase().includes(query.toLowerCase())
     );
+    console.log(f);
     // set map center to first filtered value
     f.length > 0 && this.map.setCenter(f[0].venue.location);
     this.markers.forEach(marker => {
-      marker.name.toLowerCase().includes(query) === true
+      marker.name.toLowerCase().includes(query.toLowerCase()) === true
         ? marker.setVisible(true)
         : marker.setVisible(false);
     });
@@ -134,15 +138,17 @@ export default class App extends Component {
   }
   render() {
     return (
-      <div id="app">
+      <div>
         <div id="sidebar">
-          <input
-            id="input"
-            placeholder="Type a venue"
-            onChange={e => {
-              this.filterVenues(e.target.value);
-            }}
-          />
+          <div>
+            <input
+              id="input"
+              placeholder="Type a venue"
+              onChange={e => {
+                this.filterVenues(e.target.value);
+              }}
+            />
+          </div>
           <div id="list-items">
             {this.state !== null &&
               this.state.filteredVanues.length > 0 &&
