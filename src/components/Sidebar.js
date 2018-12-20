@@ -14,6 +14,7 @@ export default class Sidebar extends Component {
           filteredVenues.map((venue, index) => (
             <div
               key={index}
+              role="complementary"
               className="venue-item"
               onClick={() => {
                 onClick(venue);

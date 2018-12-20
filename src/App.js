@@ -145,6 +145,7 @@ class App extends Component {
           <div>
             <input
               id="input"
+              role="search"
               placeholder="Type a venue"
               onChange={e => {
                 this.filterVenues(e.target.value);
