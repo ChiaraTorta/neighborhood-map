@@ -18,8 +18,9 @@ export function loadGoogleMaps() {
 
 export function loadPlaces() {
   let latLng = "48.763441,9.271830";
+  let query = "Food";
   let clientId = "YOUR_CLIENT_ID";
   let clientSecret = "YOUR_CLIENT_SECRET";
-  let apiURL = `https://api.foursquare.com/v2/venues/explore?client_id=${clientId}&client_secret=${clientSecret}&v=20180323&limit=50&ll=${latLng}&query=coffee`;
+  let apiURL = `https://api.foursquare.com/v2/venues/explore?client_id=${clientId}&client_secret=${clientSecret}&v=20180323&limit=50&ll=${latLng}&query=${query}`;
   return fetch(apiURL).then(resp => resp.json());
 }

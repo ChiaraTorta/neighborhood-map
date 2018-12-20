@@ -19,13 +19,9 @@ class App extends Component {
    *  Function to filter list items depending on query
    */
   filterVenues(query) {
-    console.log(query);
-    console.log(this.venues);
-    console.log(this.filteredVanues);
     let f = this.venues.filter(venue =>
       venue.venue.name.toLowerCase().includes(query.toLowerCase())
     );
-    console.log(f);
     // set map center to first filtered value
     f.length > 0 && this.map.setCenter(f[0].venue.location);
     this.markers.forEach(marker => {
@@ -141,7 +137,6 @@ class App extends Component {
     setTimeout(() => {
       marker[0].setAnimation(null);
     }, 1500);
-    console.log(this);
   }
   render() {
     return (
