@@ -7,16 +7,16 @@ export default class Sidebar extends Component {
     onClick: PropTypes.func.isRequired
   };
   render() {
-    // const {filteredVenues, listItemClick} = this.props;
+    const {filteredVenues, onClick} = this.props;
     return (
       <div id="list-items">
-        {this.props.filteredVenues.length > 0 &&
-          this.props.filteredVenues.map((venue, index) => (
+        {filteredVenues.length > 0 &&
+          filteredVenues.map((venue, index) => (
             <div
               key={index}
               className="venue-item"
               onClick={() => {
-                this.props.onClick(venue);
+                onClick(venue);
               }}
             >
               {venue.venue.name}
