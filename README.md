@@ -17,7 +17,7 @@ To run the app you need:
 - Node.js installed on your computer
 - [Google Maps API key](https://developers.google.com/maps/documentation/javascript/get-api-key)
 - [Foursquare API](https://developer.foursquare.com/docs/api)
-You can put both APIs into utils.js file.
+You can put both APIs into src/utils.js file.
 
 ### Development Mode
 
