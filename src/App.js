@@ -1,13 +1,45 @@
 import React, {Component} from "react";
 import "./App.css";
 import Map from "./components/Map.js";
+import Sidebar from "./components/Sidebar.js";
 import {loadGoogleMaps, loadPlaces} from "./utils.js";
 
-export default class App extends Component {
+class App extends Component {
   state: {
     query: []
   };
 
+  constructor(props) {
+    super(props);
+    // bind listItemClick function to this
+    this.listItemClick = this.listItemClick.bind(this);
+  }
+
+  /*
+   *  Function to filter list items depending on query
+   */
+  filterVenues(query) {
+    console.log(query);
+    console.log(this.venues);
+    console.log(this.filteredVanues);
+    let f = this.venues.filter(venue =>
+      venue.venue.name.toLowerCase().includes(query.toLowerCase())
+    );
+    console.log(f);
+    // set map center to first filtered value
+    f.length > 0 && this.map.setCenter(f[0].venue.location);
+    this.markers.forEach(marker => {
+      marker.name.toLowerCase().includes(query.toLowerCase()) === true
+        ? marker.setVisible(true)
+        : marker.setVisible(false);
+    });
+    // if user types a query:
+    // ...close infowindow
+    this.infoWindow.close();
+    // ...reset zoom
+    this.map.setZoom(12);
+    this.setState({filteredVanues: f, query});
+  }
   /*
    *  Function to inject third party data to the component and initialize component properties
    */
@@ -84,7 +116,7 @@ export default class App extends Component {
   /*
    *  Event handler for list item click
    */
-  listItemClick = venue => {
+  listItemClick(venue) {
     let marker = this.markers.filter(marker => marker.id === venue.venue.id);
     // open infowindow
     venue.venue.location.address !== undefined
@@ -109,32 +141,7 @@ export default class App extends Component {
     setTimeout(() => {
       marker[0].setAnimation(null);
     }, 1500);
-  };
-
-  /*
-   *  Function to filter list items depending on query
-   */
-  filterVenues(query) {
-    console.log(query);
-    console.log(this.venues);
-    console.log(this.filteredVanues);
-    let f = this.venues.filter(venue =>
-      venue.venue.name.toLowerCase().includes(query.toLowerCase())
-    );
-    console.log(f);
-    // set map center to first filtered value
-    f.length > 0 && this.map.setCenter(f[0].venue.location);
-    this.markers.forEach(marker => {
-      marker.name.toLowerCase().includes(query.toLowerCase()) === true
-        ? marker.setVisible(true)
-        : marker.setVisible(false);
-    });
-    // if user types a query:
-    // ...close infowindow
-    this.infoWindow.close();
-    // ...reset zoom
-    this.map.setZoom(12);
-    this.setState({filteredVanues: f, query});
+    console.log(this);
   }
   render() {
     return (
@@ -149,24 +156,16 @@ export default class App extends Component {
               }}
             />
           </div>
-          <div id="list-items">
-            {this.state !== null &&
-              this.state.filteredVanues.length > 0 &&
-              this.state.filteredVanues.map((venue, index) => (
-                <div
-                  key={index}
-                  className="venue-item"
-                  onClick={() => {
-                    this.listItemClick(venue);
-                  }}
-                >
-                  {venue.venue.name}
-                </div>
-              ))}
-          </div>
+          {this.state !== null && (
+            <Sidebar
+              filteredVenues={this.state.filteredVanues}
+              onClick={this.listItemClick}
+            />
+          )}
         </div>
         <Map />
       </div>
     );
   }
 }
+export default App;
