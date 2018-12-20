@@ -2,7 +2,7 @@
 
 ## Overview
 
-This app was built for the Udacity Front-End Web Developer Nanodegree Program.
+This app was built for the [Udacity Front-End Web Developer Nanodegree Program](https://eu.udacity.com/course/front-end-web-developer-nanodegree--nd001).
 
 The purposes of the project were:
 - to develop a single-page application using React featuring a map of my neighborhood (Esslingen, Germany)
